@@ -1,5 +1,6 @@
 import { useForm, useFieldArray, useWatch, Control } from "react-hook-form";
 import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type FormValues = {
   cart: {
@@ -10,26 +11,25 @@ type FormValues = {
     select: string;
   }[];
 };
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(8).max(32).required(),
+});
 
 const Total = ({ control }: { control: Control<FormValues> }) => {
   const formValues = useWatch({
     name: "cart",
     control,
   });
-  const total = formValues.reduce(
-    (acc, current) => acc + (current.price || 0),
-    0
+  const total = formValues.reduce((acc, current) => acc + current.price, 0);
+  return (
+    <div className="amount">
+      <div>Total Amount:</div> <div>{total}</div>
+    </div>
   );
-  return <p>Total Amount: {total}</p>;
 };
 
 export default function Form() {
-
-    const schema = yup.object().shape({
-        email: yup.string().email().required(),
-        name: yup.string().required(),
-      
-      });
   const {
     register,
     control,
@@ -43,8 +43,7 @@ export default function Form() {
         { name: "test", address: "MP", email: "ytr@gmail.com", price: 23 },
       ],
     },
-    mode: "onSubmit",
-    reValidateMode: "onBlur",
+    mode: "onBlur",
     resolver: yupResolver(schema),
   });
   const { fields, append, remove } = useFieldArray({
@@ -65,17 +64,21 @@ export default function Form() {
                   {...register(`cart.${index}.name` as const, {
                     required: true,
                   })}
-                  className={errors?.cart?.[index]?.name ? "error" : ""}
+                  className={errors?.cart?.[index]?.name?.message}
                   defaultValue={field.name}
                 />
+                {/* {errors?.cart?.[index]?.name ? "error" : ""} */}
+
                 <input
                   placeholder="wallet Address"
                   {...register(`cart.${index}.address` as const, {
                     required: true,
                   })}
-                  className={errors?.cart?.[index]?.address ? "error" : ""}
+                  className={errors?.cart?.[index]?.address?.message}
                   defaultValue={field.address}
                 />
+                {/* {errors?.cart?.[index]?.address ? "error" : ""} */}
+
                 <input
                   placeholder="email"
                   type="email"
@@ -83,23 +86,27 @@ export default function Form() {
                     valueAsNumber: true,
                     required: true,
                   })}
-                  className={errors?.cart?.[index]?.email ? "error" : ""}
+                  className={errors?.cart?.[index]?.email?.message}
                   defaultValue={field.email}
                 />
+                {/* {errors?.cart?.[index]?.email ? "error" : ""} */}
+
                 <select
                   placeholder="select option"
                   {...register(`cart.${index}.select` as const, {
                     valueAsNumber: true,
                     required: true,
                   })}
-                  className={errors?.cart?.[index]?.select ? "error" : ""}
+                  className={errors?.cart?.[index]?.select?.message}
                   defaultValue={field.select}
                 >
-                  <option value="select">Select</option>
+                  <option value="select" selected>
+                    Select
+                  </option>
                   <option value="lead">Lead</option>
                   <option value="Assistant">Assistant</option>
-                  <option value="none">None</option>
                 </select>
+                {/* {errors?.cart?.[index]?.select ? "error" : ""} */}
                 <input
                   placeholder="value"
                   type="number"
@@ -107,10 +114,12 @@ export default function Form() {
                     valueAsNumber: true,
                     required: true,
                   })}
-                  className={errors?.cart?.[index]?.price ? "error" : ""}
+                  className={errors?.cart?.[index]?.price?.message}
                   defaultValue={field.price}
                 />
-                <button type="button" onClick={() => remove(index)}>
+                {/* {errors?.cart?.[index]?.price ? "error" : ""} */}
+
+                <button className="remove" onClick={() => remove(index)}>
                   X
                 </button>
               </section>
@@ -138,7 +147,3 @@ export default function Form() {
     </div>
   );
 }
-function yupResolver(schema: any): import("react-hook-form").Resolver<FormValues, any> | undefined {
-    throw new Error("Function not implemented.");
-}
-
