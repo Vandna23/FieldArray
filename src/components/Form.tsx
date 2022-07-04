@@ -39,14 +39,12 @@ export default function Form() {
     defaultValues: {
       cart: [
         { name: "test", address: "UP", email: "abx@gmail.com", price: 23 },
-        { name: "test", address: "Kanpur", email: "ree@gmail.com", price: 23 },
-        { name: "test", address: "MP", email: "ytr@gmail.com", price: 23 },
       ],
     },
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, prepend, remove } = useFieldArray({
     name: "cart",
     control,
   });
@@ -124,6 +122,19 @@ export default function Form() {
         })}
 
         <Total control={control} />
+        <button
+          type="button"
+          onClick={() =>
+            prepend({
+              name: "",
+              email: "",
+              price: 0,
+              select: "",
+            })
+          }
+        >
+          Add More on Top
+        </button>
 
         <button
           type="button"
