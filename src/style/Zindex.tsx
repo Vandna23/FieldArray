@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
 `;
 export const StyledDiv = styled.div<{ zIndex: number; active: boolean }>`
   color: #553d3d;
@@ -16,7 +17,7 @@ export const StyledDiv = styled.div<{ zIndex: number; active: boolean }>`
   justify-content: ${({ active }) => (active ? "center" : "none")};
   align-items: center;
   height: 100px;
-  padding: ${({ active }) => (active ? "8px" : 0)};
+  padding: ${({ active }) => (active ? "6px" : 0)};
   width: 100px;
   border: 1px solid #83d1d8;
   margin-bottom: -46px;

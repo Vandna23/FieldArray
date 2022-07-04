@@ -34,9 +34,7 @@ const Zindex = () => {
             zIndex={calculateZIndex(index)}
           >
             {data}
-            <div>
-            {data}
-            </div>
+            <div>{data}</div>
           </StyledDiv>
         );
       })}

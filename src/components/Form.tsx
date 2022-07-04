@@ -67,7 +67,6 @@ export default function Form() {
                   className={errors?.cart?.[index]?.name?.message}
                   defaultValue={field.name}
                 />
-                {/* {errors?.cart?.[index]?.name ? "error" : ""} */}
 
                 <input
                   placeholder="wallet Address"
@@ -77,7 +76,6 @@ export default function Form() {
                   className={errors?.cart?.[index]?.address?.message}
                   defaultValue={field.address}
                 />
-                {/* {errors?.cart?.[index]?.address ? "error" : ""} */}
 
                 <input
                   placeholder="email"
@@ -89,7 +87,6 @@ export default function Form() {
                   className={errors?.cart?.[index]?.email?.message}
                   defaultValue={field.email}
                 />
-                {/* {errors?.cart?.[index]?.email ? "error" : ""} */}
 
                 <select
                   placeholder="select option"
@@ -106,7 +103,7 @@ export default function Form() {
                   <option value="lead">Lead</option>
                   <option value="Assistant">Assistant</option>
                 </select>
-                {/* {errors?.cart?.[index]?.select ? "error" : ""} */}
+
                 <input
                   placeholder="value"
                   type="number"
@@ -117,7 +114,6 @@ export default function Form() {
                   className={errors?.cart?.[index]?.price?.message}
                   defaultValue={field.price}
                 />
-                {/* {errors?.cart?.[index]?.price ? "error" : ""} */}
 
                 <button className="remove" onClick={() => remove(index)}>
                   X
