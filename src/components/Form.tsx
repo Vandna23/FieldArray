@@ -1,156 +1,113 @@
-import { useForm, useFieldArray, useWatch, Control } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 
-type FormValues = {
-  cart: {
-    name: string;
-    address: string;
-    price: number;
-    email: string;
-    select: string;
-  }[];
-};
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(32).required(),
-});
+// let renderCount = 0;
 
-const Total = ({ control }: { control: Control<FormValues> }) => {
-  const formValues = useWatch({
-    name: "cart",
-    control,
-  });
-  const total = formValues.reduce((acc, current) => acc + current.price, 0);
-  return (
-    <div className="amount">
-      <div>Total Amount:</div> <div>{total}</div>
-    </div>
-  );
-};
-
-export default function Form() {
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
+function App() {
+  const { register, control, handleSubmit, reset, watch } = useForm({
     defaultValues: {
-      cart: [
-        { name: "test", address: "UP", email: "abx@gmail.com", price: 23 },
-      ],
+      test: [{ firstName: "Bill", lastName: "Gates" }],
     },
-    mode: "onBlur",
-    resolver: yupResolver(schema),
   });
-  const { fields, append, prepend, remove } = useFieldArray({
-    name: "cart",
-    control,
-  });
-  const onSubmit = (data: FormValues) => console.log(data);
+  const { fields, append, prepend, remove, swap, move, insert, replace } =
+    useFieldArray({
+      control,
+      name: "test",
+    });
+
+  const onSubmit = (data: any) => console.log("data", data);
+
+  // renderCount++;
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {fields.map((field, index) => {
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Field Array </h1>
+      <p>The following demo allow you to delete, append, prepend items</p>
+      {/* <span className="counter">Render Count: {renderCount}</span> */}
+      <ul>
+        {fields.map((item, index) => {
           return (
-            <div key={field.id}>
-              <section className={"section"} key={field.id}>
-                <input
-                  placeholder="name"
-                  {...register(`cart.${index}.name` as const, {
-                    required: true,
-                  })}
-                  className={errors?.cart?.[index]?.name?.message}
-                  defaultValue={field.name}
-                />
+            <li key={item.id}>
+              <input {...register(`test.${index}.firstName`)} />
 
-                <input
-                  placeholder="wallet Address"
-                  {...register(`cart.${index}.address` as const, {
-                    required: true,
-                  })}
-                  className={errors?.cart?.[index]?.address?.message}
-                  defaultValue={field.address}
-                />
-
-                <input
-                  placeholder="email"
-                  type="email"
-                  {...register(`cart.${index}.email` as const, {
-                    valueAsNumber: true,
-                    required: true,
-                  })}
-                  className={errors?.cart?.[index]?.email?.message}
-                  defaultValue={field.email}
-                />
-
-                <select
-                  placeholder="select option"
-                  {...register(`cart.${index}.select` as const, {
-                    valueAsNumber: true,
-                    required: true,
-                  })}
-                  className={errors?.cart?.[index]?.select?.message}
-                  defaultValue={field.select}
-                >
-                  <option value="select" selected>
-                    Select
-                  </option>
-                  <option value="lead">Lead</option>
-                  <option value="Assistant">Assistant</option>
-                </select>
-
-                <input
-                  placeholder="value"
-                  type="number"
-                  {...register(`cart.${index}.price` as const, {
-                    valueAsNumber: true,
-                    required: true,
-                  })}
-                  className={errors?.cart?.[index]?.price?.message}
-                  defaultValue={field.price}
-                />
-
-                <button className="remove" onClick={() => remove(index)}>
-                  X
-                </button>
-              </section>
-            </div>
+              <Controller
+                render={({ field }) => <input {...field} />}
+                name={`test.${index}.lastName`}
+                control={control}
+              />
+              <button type="button" onClick={() => remove(index)}>
+                Delete
+              </button>
+            </li>
           );
         })}
-
-        <Total control={control} />
+      </ul>
+      <section>
+        <button
+          type="button"
+          onClick={() => {
+            append({ firstName: "appendBill", lastName: "appendLuo" });
+          }}
+        >
+          append
+        </button>
         <button
           type="button"
           onClick={() =>
             prepend({
-              name: "",
-              email: "",
-              price: 0,
-              select: "",
+              firstName: "prependFirstName",
+              lastName: "prependLastName",
             })
           }
         >
-          Add More on Top
+          prepend
+        </button>
+
+        <button type="button" onClick={() => swap(1, 2)}>
+          swap
+        </button>
+
+        <button type="button" onClick={() => move(1, 2)}>
+          move
         </button>
 
         <button
           type="button"
           onClick={() =>
-            append({
-              name: "",
-              email: "",
-              price: 0,
-              select: "",
+            replace([
+              {
+                firstName: "test1",
+                lastName: "test1",
+              },
+              {
+                firstName: "test2",
+                lastName: "test2",
+              },
+            ])
+          }
+        >
+          replace
+        </button>
+
+        <button type="button" onClick={() => remove(1)}>
+          remove at
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            reset({
+              test: [{ firstName: "Bill", lastName: "Luo" }],
             })
           }
         >
-          Add More
+          reset
         </button>
-        <input type="submit" />
-      </form>
-    </div>
+      </section>
+
+      <input type="submit" />
+    </form>
   );
 }
+
+export default App;
