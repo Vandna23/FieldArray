@@ -9,8 +9,8 @@ function App() {
   return (
     <div className="App">
       {/* <Form /> */}
-      <Form1 />
-      {/* <Zindex /> */}
+      {/* <Form1 /> */}
+      <Zindex />
       {/* <State /> */}
     </div>
   );
